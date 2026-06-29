@@ -1,0 +1,86 @@
+version: "3.8"
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  consumer-service:
+    build:
+      context: ./consumer-service
+    container_name: consumer-service
+    environment:
+      MQ_HOST: rabbitmq
+      MQ_PORT: 5672
+      MQ_USER: guest
+      MQ_PASS: guest
+      MQ_QUEUE_NAME: user_activity
+      MONGO_URI: mongodb://root:example@mongodb:27017/
+      MONGO_DB_NAME: user_activity_logs
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - app-network
+
+  api-service:
+    build:
+      context: ./api-service
+    container_name: api-service
+    ports:
+      - "8000:8000"
+    environment:
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      MONGO_URI: mongodb://root:example@mongodb:27017/
+      MONGO_DB_NAME: user_activity_logs
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - app-network
+
+volumes:
+  mongo_data:
+
+networks:
+  app-network:
+    driver: bridge
