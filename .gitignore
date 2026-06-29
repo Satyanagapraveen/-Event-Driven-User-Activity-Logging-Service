@@ -1,1 +1,53 @@
+# ============================================
+# Environment Variables - NEVER COMMIT SECRETS
+# ============================================
 .env
+
+# ============================================
+# Python
+# ============================================
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# ============================================
+# IDE & Editor
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ============================================
+# Docker
+# ============================================
+# Docker images are built, not committed
+# (keep Dockerfiles, ignore any accidental image dumps)
+*.tar
+
+# ============================================
+# OS Files (macOS, Windows, Linux)
+# ============================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# ============================================
+# MongoDB
+# ============================================
+# Local MongoDB data directory (if mounted locally for testing)
+mongo_data/
+
+# ============================================
+# Logs
+# ============================================
+*.log
+logs/
