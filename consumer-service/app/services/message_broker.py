@@ -66,7 +66,7 @@ class MessageBroker:
             properties: Any,
             body: bytes,
         ) -> None:
-            success = asyncio.run(callback(body))
+            success = callback(body)
             if success:
                 ch.basic_ack(delivery_tag=method.delivery_tag)
             else:

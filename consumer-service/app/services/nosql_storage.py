@@ -33,11 +33,13 @@ class NoSqlStorage:
             },
         )
     def connect_sync(self) -> None:
+        import asyncio
         asyncio.run(self.connect())
 
     def disconnect_sync(self) -> None:
+        import asyncio
         asyncio.run(self.disconnect())
-        
+
     async def _ensure_indexes(self) -> None:
         await self.collection.create_index(
             "event_id",
@@ -54,10 +56,10 @@ class NoSqlStorage:
         )
         logger.info("Database indexes ensured")
 
-    async def save_event(self, event: EnrichedUserActivityEvent) -> bool:
+    def save_event(self, event: EnrichedUserActivityEvent) -> bool:
         document = event.model_dump()
 
-        result = await self.collection.update_one(
+        result = self.collection.delegate.update_one(
             {"event_id": event.event_id},
             {"$setOnInsert": document},
             upsert=True,

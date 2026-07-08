@@ -14,14 +14,14 @@ class EventProcessor:
     def __init__(self, storage):
         self.storage = storage
 
-    async def process(self, message_body: bytes) -> bool:
+    def process(self, message_body: bytes) -> bool:
         raw_event = self._parse_and_validate(message_body)
         if raw_event is None:
             return False
 
         enriched_event = self._enrich(raw_event)
 
-        success = await self.storage.save_event(enriched_event)
+        success = self.storage.save_event(enriched_event)
         return success
 
     def _parse_and_validate(self, message_body: bytes) -> RawUserActivityEvent | None:
