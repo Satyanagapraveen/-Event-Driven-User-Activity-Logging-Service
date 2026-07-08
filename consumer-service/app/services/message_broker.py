@@ -2,7 +2,7 @@ import logging
 import signal
 import time
 from typing import Optional, Callable, Any
-
+import asyncio
 import pika
 from pika.adapters.blocking_connection import BlockingChannel
 from pika.exceptions import AMQPConnectionError, ConnectionClosedByBroker
@@ -66,7 +66,7 @@ class MessageBroker:
             properties: Any,
             body: bytes,
         ) -> None:
-            success = callback(body)
+            success = asyncio.run(callback(body))
             if success:
                 ch.basic_ack(delivery_tag=method.delivery_tag)
             else:

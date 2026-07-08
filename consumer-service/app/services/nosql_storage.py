@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
-
+import asyncio
 from app.models import EnrichedUserActivityEvent
 
 logger = logging.getLogger(__name__)
@@ -33,14 +33,11 @@ class NoSqlStorage:
             },
         )
     def connect_sync(self) -> None:
-        import asyncio
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.connect())
+        asyncio.run(self.connect())
 
     def disconnect_sync(self) -> None:
-        import asyncio
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.disconnect())
+        asyncio.run(self.disconnect())
+        
     async def _ensure_indexes(self) -> None:
         await self.collection.create_index(
             "event_id",
