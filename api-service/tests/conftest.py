@@ -1,5 +1,6 @@
 import pytest
 import mongomock
+from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.services.nosql_query import NoSqlQuery
@@ -20,40 +21,40 @@ async def seeded_query_service(mock_mongo_client):
             "event_id": "evt-001",
             "user_id": "user-1",
             "event_type": "login",
-            "timestamp": "2023-10-01T10:00:00Z",
-            "processing_timestamp": "2023-10-01T10:00:01Z",
+            "timestamp": datetime(2023, 10, 1, 10, 0, 0, tzinfo=timezone.utc),
+            "processing_timestamp": datetime(2023, 10, 1, 10, 0, 1, tzinfo=timezone.utc),
             "details": {"ip": "10.0.0.1"},
         },
         {
             "event_id": "evt-002",
             "user_id": "user-1",
             "event_type": "view_product",
-            "timestamp": "2023-10-02T11:00:00Z",
-            "processing_timestamp": "2023-10-02T11:00:01Z",
+            "timestamp": datetime(2023, 10, 2, 11, 0, 0, tzinfo=timezone.utc),
+            "processing_timestamp": datetime(2023, 10, 2, 11, 0, 1, tzinfo=timezone.utc),
             "details": {"product": "abc"},
         },
         {
             "event_id": "evt-003",
             "user_id": "user-2",
             "event_type": "login",
-            "timestamp": "2023-10-03T12:00:00Z",
-            "processing_timestamp": "2023-10-03T12:00:01Z",
+            "timestamp": datetime(2023, 10, 3, 12, 0, 0, tzinfo=timezone.utc),
+            "processing_timestamp": datetime(2023, 10, 3, 12, 0, 1, tzinfo=timezone.utc),
             "details": {"ip": "10.0.0.2"},
         },
         {
             "event_id": "evt-004",
             "user_id": "user-2",
             "event_type": "purchase",
-            "timestamp": "2023-10-04T13:00:00Z",
-            "processing_timestamp": "2023-10-04T13:00:01Z",
+            "timestamp": datetime(2023, 10, 4, 13, 0, 0, tzinfo=timezone.utc),
+            "processing_timestamp": datetime(2023, 10, 4, 13, 0, 1, tzinfo=timezone.utc),
             "details": {"order": "ord-99"},
         },
         {
             "event_id": "evt-005",
             "user_id": "user-1",
             "event_type": "logout",
-            "timestamp": "2023-10-05T14:00:00Z",
-            "processing_timestamp": "2023-10-05T14:00:01Z",
+            "timestamp": datetime(2023, 10, 5, 14, 0, 0, tzinfo=timezone.utc),
+            "processing_timestamp": datetime(2023, 10, 5, 14, 0, 1, tzinfo=timezone.utc),
             "details": None,
         },
     ]
