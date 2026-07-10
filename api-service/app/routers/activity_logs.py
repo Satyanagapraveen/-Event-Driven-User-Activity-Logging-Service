@@ -1,10 +1,10 @@
 from typing import List, Dict, Any
-
+import logging
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.models import ActivityLogQueryParams
 from app.services.nosql_query import NoSqlQuery
-
+logger=logging.getLogger(__name__)
 def get_query_service() -> NoSqlQuery:
     from app.main import query_service
     return query_service
@@ -19,6 +19,7 @@ async def get_activity_logs(
         documents = await query_service.fetch_activity_logs(params)
         return documents
     except Exception as e:
+        logger.exception("Failed to fetch activity logs")
         raise HTTPException(
             status_code=500,
             detail=f"Failed to fetch activity logs: {str(e)}",

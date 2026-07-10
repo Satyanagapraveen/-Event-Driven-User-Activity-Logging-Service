@@ -61,7 +61,10 @@ class NoSqlQuery:
         cursor = cursor.skip(params.offset)
         cursor = cursor.limit(params.limit)
 
-        documents = await cursor.to_list(length=params.limit)
+        try:
+            documents = await cursor.to_list(length=params.limit)
+        except AttributeError:
+            documents = list(cursor)
 
         for doc in documents:
             doc["_id"] = str(doc["_id"])

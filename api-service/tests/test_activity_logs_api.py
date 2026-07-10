@@ -7,6 +7,11 @@ from app.models import ActivityLogQueryParams
 from app.routers.activity_logs import get_query_service
 
 class TestActivityLogsAPI:
+    async def test_get_all_events_default_pagination(self, client):
+        response = await client.get("/api/v1/activity-logs")
+        print(f"Status: {response.status_code}")
+        print(f"Body: {response.text}")
+        assert response.status_code == 200
 
     @pytest.fixture
     async def client(self, seeded_query_service):
