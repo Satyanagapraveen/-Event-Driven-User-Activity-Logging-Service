@@ -5,13 +5,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.models import ActivityLogQueryParams
 from app.services.nosql_query import NoSqlQuery
 
-router = APIRouter(prefix="/api/v1", tags=["activity-logs"])
-
-
 def get_query_service() -> NoSqlQuery:
     from app.main import query_service
     return query_service
-
+router = APIRouter(prefix="/api/v1", tags=["activity-logs"])
 
 @router.get("/activity-logs", response_model=List[Dict[str, Any]])
 async def get_activity_logs(
