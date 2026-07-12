@@ -56,8 +56,8 @@ services:
       mongodb:
         condition: service_healthy
     volumes:
-      - ./api-service/tests:/app/tests
-      - ./api-service/app:/app/app
+      - ./consumer-service/app:/app/app
+      - ./consumer-service/tests:/app/tests
     restart: on-failure
     networks:
       - app-network
